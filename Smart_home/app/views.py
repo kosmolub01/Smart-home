@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Devices
 from .mqtt_manager import *
@@ -63,6 +63,24 @@ def index(request):
 
 """Assigning  localization page."""
 def assign_localization(request):
-    # pass active devices so user can choose to which device assign location
-    return render(request, 'app/assign_localization.html')
+    # Get list of devices from server-side DB, so user can choose to which device assign location.
+    devices = Devices.objects.all()
+    print("in assign_localization devices", devices)
+    context = {'devices_list': devices}
+    return render(request, 'app/assign_localization.html', context)
 
+"""Save assigned localizations in the DB."""
+def save_assigned_localizations(request):
+    localizations = request.GET.get('localizations', '').split(',')
+    
+    devices = Devices.objects.all()
+
+    i = 0
+
+    for device in devices:
+        print("localization: ", localizations[i])
+        device.localization = localizations[i]
+        device.save()
+        i = i + 1
+
+    return HttpResponse('ok')

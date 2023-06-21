@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('assign_localization/', views.assign_localization, name='assign_localization'),
+    path('save_assigned_localizations/', views.save_assigned_localizations, name='save_assigned_localizations'),
 ]

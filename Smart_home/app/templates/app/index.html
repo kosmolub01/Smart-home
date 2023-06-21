@@ -61,6 +61,60 @@
         .assign-localization-button:hover {
             background-color: #45a049;
         }
+
+        .send-button {
+            display: inline;
+            margin: 20px auto auto 10;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .send-button:hover {
+            background-color: #45a049;
+        }
+
+        .clear-button {
+            display: inline;
+            margin: 20px auto auto 10;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .clear-button:hover {
+            background-color: #45a049;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            width: 40%;
+            font-size: 14px;
+            height: 14px;
+        }
+
+        .chat-input input[type="text"] {
+            width: 40%; /* Set the width to 100% to occupy the entire available space. */
+            padding: 10px; /* Add padding for better appearance. */
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -98,10 +152,24 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <h1 style="margin-top: 40px;">Chatbot</h1>
+
+    <!-- Chatbox section -->
+    <div class="chat-container">
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message to the Chatbot...">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+            <button class="clear-button" onclick="clearMessages()">Clear</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat messages will be displayed here -->
+        </div>
+    </div>
     
     <script>
         function refreshPage() {
-            location.reload(); // Reload the page
+            location.reload(); // Reload the page.
         }
 
         function assignLocalization() {
@@ -112,12 +180,34 @@
                 if (response.ok) {
                     window.location.href = '/assign_localization/';
                 } else {
-                    // Handle error response
+                    // Handle error response.
                 }
             })
             .catch(error => {
-                // Handle fetch error
+                // Handle fetch error.
             });
+        }
+
+        function sendMessage() {
+            var chatMessages = document.getElementById('chat-messages');
+            chatMessages.style.height = 'fit-content';
+            var userInput = document.getElementById('user-input').value;
+            // Process the user input, send to backend, etc.
+
+            // Example: Display user message in the chatbox.
+            var chatMessages = document.getElementById('chat-messages');
+            var userMessage = document.createElement('div');
+            userMessage.textContent = 'User: ' + userInput;
+            chatMessages.appendChild(userMessage);
+
+            // Clear the input field.
+            document.getElementById('user-input').value = '';
+        }
+
+        function clearMessages() {
+            var chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = ''; // Clear the content of the chat-messages element.
+            chatMessages.style.height = '14px';
         }
     </script>
 </body>
