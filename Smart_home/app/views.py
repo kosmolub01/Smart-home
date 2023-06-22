@@ -83,4 +83,28 @@ def save_assigned_localizations(request):
         device.save()
         i = i + 1
 
-    return HttpResponse('ok')
+    return HttpResponse(status=200)
+
+"""Handle message passed to the Chatbot."""
+def message_to_the_chatbot(request):
+    # Get the value of the 'message' parameter from the GET request.
+    message = request.GET.get('message')  
+
+    # Create a response with parameter.
+    response = HttpResponse(status=200)
+
+    # Init Chatbot with list of tuples (device, locations). Make sure the device has assigned localization.
+
+    # Send message to Chatbot.
+
+    # Detect what Chatbot returned. 
+    # If it is list with command info, react accordingly (pass command to MQTT manager, display 'Command was sent.').
+    # If it is regular string, just display it.
+
+    # Set parameter in the response headers.
+    response['chatbot_response'] = 'chatbot response string'  
+
+    # Set the response content
+    response.content = 'Response Content'
+
+    return response

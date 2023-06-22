@@ -192,9 +192,8 @@
             var chatMessages = document.getElementById('chat-messages');
             chatMessages.style.height = 'fit-content';
             var userInput = document.getElementById('user-input').value;
-            // Process the user input, send to backend, etc.
 
-            // Example: Display user message in the chatbox.
+            // Display user message in the chatbox.
             var chatMessages = document.getElementById('chat-messages');
             var userMessage = document.createElement('div');
             userMessage.textContent = 'User: ' + userInput;
@@ -202,6 +201,39 @@
 
             // Clear the input field.
             document.getElementById('user-input').value = '';
+
+            // Construct the URL with parameter.
+            var url = '/message_to_the_chatbot/?message=' + encodeURIComponent(userInput);
+
+            // Process the user input, send to backend, etc.
+            fetch(url, {
+                method: 'GET'
+            })
+            .then(response => {
+                // Retrieve the parameter from the response headers.
+                var chatbot_response = response.headers.get('chatbot_response');
+
+                if (response.ok) {
+                    // Display Chatbot message in the chatbox.
+                    var chatMessages = document.getElementById('chat-messages');
+                    var chatMessage = document.createElement('div');
+                    chatMessage.textContent += 'Chatbot: ' + chatbot_response;
+                    chatMessages.appendChild(chatMessage);
+                } else {
+                    // Display error message in the chatbox.
+                    var chatMessages = document.getElementById('chat-messages');
+                    var errorMessage = document.createElement('div');
+                    errorMessage.textContent += 'Chatbot: ' + chatbot_response;
+                    chatMessages.appendChild(errorMessage);                  
+                }
+            })
+            .catch(error => {
+                // Display error message in the chatbox.
+                var chatMessages = document.getElementById('chat-messages');
+                var errorMessage = document.createElement('div');
+                errorMessage.textContent += 'Error';
+                chatMessages.appendChild(errorMessage);
+            });        
         }
 
         function clearMessages() {
