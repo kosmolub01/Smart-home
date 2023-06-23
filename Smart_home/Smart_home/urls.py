@@ -23,4 +23,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('assign_localization/', views.assign_localization, name='assign_localization'),
     path('save_assigned_localizations/', views.save_assigned_localizations, name='save_assigned_localizations'),
+    path('message_to_the_chatbot/', views.message_to_the_chatbot, name='message_to_the_chatbot'),
 ]

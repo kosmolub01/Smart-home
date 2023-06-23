@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Devices
 from .mqtt_manager import *
+from .chatbot import *
 
 broker_ip = "192.168.0.250"
 
@@ -10,7 +11,7 @@ broker_ip = "192.168.0.250"
 - assign localization to them, 
 - interact with Chatbot."""
 def index(request):
-    # Create mqtt_manager object, so retrieving active devices is possible.
+    # Create MqttManager object, so retrieving active devices is possible.
     manager = MqttManager(broker_ip)
 
     # Get list of active devices (it's a list of tuples) from MQTT Manager.
@@ -83,4 +84,61 @@ def save_assigned_localizations(request):
         device.save()
         i = i + 1
 
-    return HttpResponse('ok')
+    return HttpResponse(status=200)
+
+"""Handle message passed to the Chatbot."""
+def message_to_the_chatbot(request):
+    # Get the value of the 'message' parameter from the GET request.
+    message = request.GET.get('message')  
+
+    # Create a response with parameter.
+    response = HttpResponse(status=200)
+
+    # Init Chatbot with the list of tuples (device, locations). Make sure the device has assigned localization.
+    devices = Devices.objects.values('name', 'localization')
+    # Transform list of dictonairies into list of tuples.
+    devices = [(device['name'], device['localization']) for device in devices]
+    # Init Chatbot
+    chatbot = Chatbot(devices)
+
+    # Send message to Chatbot.
+    chatbot_response = chatbot.send_message(message)
+
+    # Detect what Chatbot returned. 
+    # If it is a list with command info, react accordingly (pass command to MQTT manager, display 'Command was sent.').
+    # If it is regular string, just display it.
+    if type(chatbot_response) is list:
+
+        print('chatbot_response is list')
+
+        #Get the device.
+        device = Devices.objects.get(name=chatbot_response[1], localization=chatbot_response[2])
+
+        # Check what kind of command was sent by user.
+        if chatbot_response[0] == 'value':
+            # User wants to check value of the device. 
+            # Create response.
+            chatbot_response = 'Value of ' + device.name + ' in ' + device.localization + ': ' + device.value + '.'
+        else:
+            # User wants to set the value of the device.
+            # Create MqttManager object, so passing command to the device is possible.
+            manager = MqttManager(broker_ip) 
+            # Distinguish whether user wants to set particular value or only turn on / off the device.
+            if chatbot_response[0] == 'set to':
+                # Set to particular value.
+                print(device.mac, device.device_id, chatbot_response[3], 'set to')
+                manager.set_value(device.mac, device.device_id, chatbot_response[3])
+            else:
+                # Turn on / off etc.
+                print('Turn on / off')
+                manager.set_value(device.mac, device.device_id, chatbot_response[0])
+            
+            chatbot_response = 'Command was sent.'
+
+    # Set parameter in the response headers.
+    response['chatbot_response'] = chatbot_response 
+
+    # Set the response content
+    response.content = 'Response Content'
+
+    return response
