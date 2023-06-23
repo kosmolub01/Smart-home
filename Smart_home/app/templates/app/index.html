@@ -115,6 +115,15 @@
             border: 1px solid #ccc;
             font-size: 14px;
         }
+
+        .chatbot-label {
+        color: green;
+        }
+
+        .chatbot-error-label {
+        color: red;
+        }
+
     </style>
 </head>
 <body>
@@ -217,13 +226,13 @@
                     // Display Chatbot message in the chatbox.
                     var chatMessages = document.getElementById('chat-messages');
                     var chatMessage = document.createElement('div');
-                    chatMessage.textContent += 'Chatbot: ' + chatbot_response;
+                    chatMessage.innerHTML = '<span class="chatbot-label">Chatbot:</span> ' + chatbot_response;
                     chatMessages.appendChild(chatMessage);
                 } else {
                     // Display error message in the chatbox.
                     var chatMessages = document.getElementById('chat-messages');
                     var errorMessage = document.createElement('div');
-                    errorMessage.textContent += 'Chatbot: ' + chatbot_response;
+                    chatMessage.innerHTML = '<span class="chatbot-error-label">Chatbot:</span> ' + chatbot_response;
                     chatMessages.appendChild(errorMessage);                  
                 }
             })
@@ -231,7 +240,7 @@
                 // Display error message in the chatbox.
                 var chatMessages = document.getElementById('chat-messages');
                 var errorMessage = document.createElement('div');
-                errorMessage.textContent += 'Error';
+                errorMessage.innerHTML = '<span class="chatbot-error-label">Chatbot:</span> Error.';
                 chatMessages.appendChild(errorMessage);
             });        
         }
