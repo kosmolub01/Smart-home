@@ -42,42 +42,42 @@ class Chatbot:
         # Check if user uses smart-home functions, then react accordingly.
         if response == 'value':
             for device, location in self.devices:
-                if message.find(device) != -1 & message.find(location) != -1:
+                if message.find(device) != -1 and message.find(location) != -1:
                     return ['value', device, location]
                 else:
                     response = "I am not sure what you are trying to say."
 
         elif response == 'turn on':
             for device, location in self.devices:
-                if message.find(device) != -1 & message.find(location) != -1:
+                if message.find(device) != -1 and message.find(location) != -1:
                     return ['turn on', device, location]
                 else:
                     response = "I am not sure what you are trying to say."
 
         elif response == 'turn off':
             for device, location in self.devices:
-                if message.find(device) != -1 & message.find(location) != -1:
+                if message.find(device) != -1 and message.find(location) != -1:
                     return ['turn off', device, location]
                 else:
                     response = "I am not sure what you are trying to say."
 
         elif response == 'switch on':
             for device, location in self.devices:
-                if message.find(device) != -1 & message.find(location) != -1:
+                if message.find(device) != -1 and message.find(location) != -1:
                     return ['switch on', device, location]
                 else:
                     response = "I am not sure what you are trying to say."
 
         elif response == 'switch off':
             for device, location in self.devices:
-                if message.find(device) != -1 & message.find(location) != -1:
+                if message.find(device) != -1 and message.find(location) != -1:
                     return ['switch off', device, location]
                 else:
                     response = "I am not sure what you are trying to say."
 
         elif response == 'set to':
             for device, location in self.devices:
-                if message.find(device) != -1 & message.find(location) != -1:
+                if message.find(device) != -1 and message.find(location) != -1:
                     value = rx.findall(message, message.find('set to') + 7)
                     return ['set to', device, location, str(value[0])]
                 else:
