@@ -4,7 +4,7 @@ from .models import Devices
 from .mqtt_manager import *
 from .chatbot import *
 
-broker_ip = "192.168.0.250"
+broker_ip = "192.168.1.105"
 
 """Starting page. User can:
 - see table of active devices, 
@@ -140,5 +140,80 @@ def message_to_the_chatbot(request):
 
     # Set the response content
     response.content = 'Response Content'
+
+    return response
+
+"""Update the table content."""
+def update_the_table_content(request):
+    # Create MqttManager object, so retrieving active devices is possible.
+    manager = MqttManager(broker_ip)
+
+    # Get list of active devices (it's a list of tuples) from MQTT Manager.
+    active_devices = manager.get_devices_list()
+
+    print("active devices", active_devices)
+
+    # Get list of devices from server-side DB.
+    devices = Devices.objects.all()
+
+    # List of currently connected devices. Devices present on that list are not going to be deleted with server-side DB update.
+    current_devices = []
+
+    # Assign to every device, so devices have ordinal number.
+    number = 1
+
+    # Compare devices from MQTT Manager and devices from server-side DB.
+    # Update server-side DB with new devices. Update server-side DB already present devices (field 'value').
+    # The whole point of it is to update the table of devices, seen by the user, and also to remember assigned localizations of devices.
+    for active_device in active_devices:
+        # Retrieve the device based on mac and device_id.
+        obj, created = Devices.objects.get_or_create(mac = active_device[1], device_id = active_device[2],
+                                                     defaults={#'pk' : number,
+                                                               'name' : active_device[0],
+                                                               'mac': active_device[1],
+                                                               'device_id': active_device[2],
+                                                               'type': active_device[3],
+                                                               'value': active_device[4]})
+
+        # If the device is already present in the server-side DB, then update only 'value' field.
+        if not created:
+            #obj.pk = number
+            obj.value = active_device[4]
+
+        current_devices.append(obj)
+
+        number = number + 1
+
+    print("current_devices", current_devices)
+
+    # Generate HTML table with current devices.
+    table = '<tbody>'
+
+    # Device ordinal number within the table.
+    device_ordinal_number = 1
+
+    # Update server-side DB and table.
+    Devices.objects.all().delete()
+    print("after delete ", Devices.objects.all())
+    for device in current_devices:
+        device.save()
+        table += """<tr>
+                        <td>""" + str(device_ordinal_number) + """</td>
+                        <td>""" + device.name + """</td>
+                        <td>""" + device.mac  +"""</td>
+                        <td>""" + str(device.device_id)  +"""</td>
+                        <td>""" + device.localization +"""</td>
+                        <td>""" + device.type + """</td>
+                        <td>""" + device.value + """</td>
+                    </tr>"""
+        
+        device_ordinal_number += 1
+
+    table += '</tbody>'
+
+    print(table)
+
+    # Create a response with parameter.
+    response = HttpResponse(table)
 
     return response
