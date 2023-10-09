@@ -25,13 +25,13 @@ Smart Home is a web app, that combined with auxiliary software and proper device
 
 
 ## Screenshots
-![image](https://github.com/kosmolub01/cwiczenia-z-gitem/assets/72302279/07739a90-ca0b-4ba0-9259-824b7f1c31fa)
-![image](https://github.com/kosmolub01/cwiczenia-z-gitem/assets/72302279/7d9ceab3-507c-4ba6-a687-8106ed850a77)
-![image](https://github.com/kosmolub01/cwiczenia-z-gitem/assets/72302279/2cefb99f-9e50-4c58-8a8f-ab8640bc1de6)
+![image](https://github.com/kosmolub01/Smart-home/assets/72302279/d0fbcfc5-c880-48dc-879e-074920b8f777)
+![image](https://github.com/kosmolub01/Smart-home/assets/72302279/71b26c5a-7028-4324-8838-f2fa6d45e183)
+![image](https://github.com/kosmolub01/Smart-home/assets/72302279/5ea55166-2c26-4294-bf2a-4ae5fd0aab6a)
 
 
 ## Project Components
-![image](https://github.com/kosmolub01/cwiczenia-z-gitem/assets/72302279/19860b0e-23a1-445b-9fd0-a1da8ee0f3ce)
+![image](https://github.com/kosmolub01/Smart-home/assets/72302279/8584eb22-79c7-482d-a7b9-1449d1cb8ee3)
 
 This project contains source code of the web app, Chatbot and MQTT Manager. The only additional software that you need to set up is Python with required packages and the MQTT broker.
 
